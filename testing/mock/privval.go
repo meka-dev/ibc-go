@@ -9,7 +9,10 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
-var _ tmtypes.PrivValidator = PV{}
+// MEKATEK: This makes evmos builds fail with our patched Tendermint,
+// since it's missing a SignMekaBuild method. Since this isn't used in
+// production code, we just comment it out for builds to succeed.
+// var _ tmtypes.PrivValidator = PV{}
 
 // MockPV implements PrivValidator without any safety or persistence.
 // Only use it for testing.
