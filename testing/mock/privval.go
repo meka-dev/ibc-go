@@ -5,6 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/tendermint/tendermint/crypto"
+	privvalproto "github.com/tendermint/tendermint/proto/tendermint/privval"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
@@ -45,5 +46,23 @@ func (pv PV) SignProposal(chainID string, proposal *tmproto.Proposal) error {
 		return err
 	}
 	proposal.Signature = sig
+	return nil
+}
+
+func (pv PV) SignMekatekBuild(b *privvalproto.MekatekBuild) error {
+	signature, err := pv.PrivKey.Sign(metabuild.BuildBlockRequestSignBytes(
+		b.ChainID,
+		b.Height,
+		b.ValidatorAddr,
+		b.MaxBytes,
+		b.MaxGas,
+		b.TxsHash,
+	))
+	if err != nil {
+		return err
+	}
+
+	b.Signature = signature
+
 	return nil
 }
